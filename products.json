@@ -1,0 +1,16 @@
+[
+    {
+        "name": "spark",
+        "lp-building-project": "soss",
+        "lp-releasing-project": "spark-releases",
+        "lp-building-repo": "~data-platform/soss/+source/charmed-spark/+git/charmed-spark/",
+        "lp-building-branch-prefix": "lp-3.4",
+        "lp-consumer-key": "LP_CONSUMER_KEY_SPARK",
+        "lp-access-token": "LP_ACCESS_TOKEN_SPARK",
+        "lp-access-secret": "LP_SECRET_TOKEN_SPARK",
+        "artifactory-url": "ARTIFACTORY_DEPLOY_URL",
+        "artifactory-user": "ARTIFACTORY_USER",
+        "artifactory-token": "ARTIFACTORY_TOKEN",
+        "tarball-regex": "spark-*.tgz"
+    }
+]
