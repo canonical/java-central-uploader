@@ -64,9 +64,7 @@ def test_get_repositories_tags():
 
 def test_check_next_release_name():
     """This function test that the new release name is valid."""
-    with patch(
-        "uploader.utils.get_product_tags", return_value=["spark-3.4.1-ubuntu0"]
-    ):
+    with patch("uploader.utils.get_product_tags", return_value=["spark-3.4.1-ubuntu0"]):
         assert check_next_release_name(
             "test-owner", "test-project", "spark", "3.4.1", "spark-3.4.1-ubuntu1"
         )
