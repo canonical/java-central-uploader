@@ -47,7 +47,7 @@ def _get_tokenized_librarian_url(lp: Launchpad, file_url: str) -> str:
         logger.debug(ret)
         assert False, "No redirect to download from, we can't proceed"
     except httplib2.RedirectLimit as e:
-        return e.response["location"]  # type: str
+        return str(e.response["location"])
 
 
 def parse_args() -> Namespace:
@@ -117,7 +117,6 @@ def get_build_runs_by_branch(
     branches: Dict[str, List[Any]]
 ) -> Dict[str, List[CIBuild]]:
     """Fetch the list of build runs by branch."""
-    branch_builds = {}
     branch_builds: Dict[str, List[CIBuild]] = {}
 
     # iterate over builds
