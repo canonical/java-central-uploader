@@ -160,6 +160,9 @@ jobs:
         with:
           name: releases-${{ inputs.name }}
 
+      - name: Install Python dependencies
+        run: pip install -r requirements.txt
+
       - name: Decompress all versions and list them
         run: |
           unzip ${{ env.OUTPUT_DIR }}-${{ inputs.name }}.zip 
@@ -178,6 +181,7 @@ jobs:
           echo "TARBALL FILENAME: $tarball_filename"
           echo "TARBALL_FILENAME=$tarball_filename" >> $GITHUB_OUTPUT
           cd
+          ls
           version=$( python3 -m uploader.services get-version -n $tarball_filename )
           track=$(echo "${{ inputs.lp-building-branch-prefix }}" | awk -F '-' '{print $NF}')
 
@@ -200,9 +204,6 @@ jobs:
           access_token = ${ACCESS_TOKEN}
           access_secret = ${ACCESS_SECRET}
           EOF
-
-      - name: Install Python dependencies
-        run: pip install -r requirements.txt
 
       - name: Release package on Launchpad
         id: create-new-lp-release
