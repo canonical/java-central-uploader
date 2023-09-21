@@ -114,7 +114,7 @@ jobs:
           cd ${{ env.OUTPUT_DIR }};
           number_of_releases=$( ls . | wc -l )
           echo "Number of remaining releases: $number_of_releases"
-          if [ $number_of_releases != 1 ]; then
+          if [ $number_of_releases < 1 ]; then
             echo "Nothing to update!"
             echo "release-package=false" > $GITHUB_OUTPUT
             exit 0
