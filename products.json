@@ -8,9 +8,23 @@
         "lp-consumer-key": "LP_CONSUMER_KEY_SPARK",
         "lp-access-token": "LP_ACCESS_TOKEN_SPARK",
         "lp-access-secret": "LP_SECRET_TOKEN_SPARK",
-        "artifactory-url": "ARTIFACTORY_DEPLOY_URL",
+        "artifactory-url": "https://canonical.jfrog.io/artifactory/dataplatform-spark-maven-local/",
         "artifactory-user": "ARTIFACTORY_USER",
         "artifactory-token": "ARTIFACTORY_TOKEN",
         "tarball-regex": "spark-*.tgz"
+    },
+    {
+        "name": "opensearch",
+        "lp-building-project": "soss",
+        "lp-releasing-project": "opensearch-releases",
+        "lp-building-repo": "~data-platform/soss/+source/opensearch-build/+git/opensearch-build/",
+        "lp-building-branch-prefix": "lp-2",
+        "lp-consumer-key": "LP_CONSUMER_KEY_SPARK",
+        "lp-access-token": "LP_ACCESS_TOKEN_SPARK",
+        "lp-access-secret": "LP_SECRET_TOKEN_SPARK",
+        "artifactory-url": "https://canonical.jfrog.io/artifactory/dataplatform-opensearch-maven-local/",
+        "artifactory-user": "ARTIFACTORY_USER",
+        "artifactory-token": "ARTIFACTORY_TOKEN",
+        "tarball-regex": "opensearch-*.tar.gz"
     }
 ]

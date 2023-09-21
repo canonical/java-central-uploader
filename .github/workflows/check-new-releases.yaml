@@ -288,7 +288,7 @@ jobs:
             upload-product-jars \
             --tarball-path "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }}" \
             --mvn-repository "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/repository.zip" \
-            --artifactory-url "${{ secrets[inputs.artifactory-url] }}" \
+            --artifactory-url "${{ inputs.artifactory-url }}" \
             --artifactory-username "${{ secrets[inputs.artifactory-user] }}" \
             --artifactory-password "${{ secrets[inputs.artifactory-token] }}"
 
