@@ -209,10 +209,16 @@ jobs:
         id: create-new-lp-release
         run: |
           echo "Tarball name: ${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }} | version: ${{ steps.get-tarball-name.outputs.VERSION }}"
+          lp-track=$(${{ steps.get-tarball-name.outputs.TRACK }})
+          track-length=$( echo $lp-track | wc -c )
+          if [ $track-length < 3 ]; then
+            lp-track+="${{ inputs.name }}"
+          fi
+          echo "lp-track $lp-track"
           python3 -m uploader.launchpad_release \
             --app "${{ inputs.name }}" \
             --project "${{ inputs.lp-releasing-project }}" \
-            --track "${{ inputs.name }}-${{ steps.get-tarball-name.outputs.TRACK }}" \
+            --track lp-track \
             --version "${{ steps.get-tarball-name.outputs.VERSION }}" \
             --tarball "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }}" \
             --credentials ${{ env.LP_CREDENTIALS }}
