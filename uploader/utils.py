@@ -15,8 +15,8 @@ from requests.auth import HTTPBasicAuth
 
 logger = logging.getLogger(__name__)
 
-PRODUCT_PATTERN = "^[a-z]*-\\d[.]\\d[.]\\d-ubuntu(0|[1-9][0-9]*)-(20\\d{2})[01][1-9][0-3][1-9][0-1]\\d[0-5]\\d[0-5]\\d\\-S*"
-TAG_PATTERN = "-(20\\d{2})[01][1-9][0-3][1-9][0-1]\\d[0-5]\\d[0-5]\\d\\-S*"
+PRODUCT_PATTERN = "^[a-z]*-\\d[.]\\d[.]\\d-ubuntu(0|[1-9][0-9]*)-(20\\d{2})[01][1-9][0-3][0-9][0-1]\\d[0-5]\\d[0-5]\\d\\-S*"
+TAG_PATTERN = "-(20\\d{2})[01][1-9][0-3][0-9][0-1]\\d[0-5]\\d[0-5]\\d\\-S*"
 RELEASE_VERSION = "^[a-z]*-\\d[.]\\d[.]\\d-ubuntu(0|[1-9][0-9]*)"
 
 CUSTOM_KEYMAP = [".jar", ".pom", ".sha1", ".sha256", ".sha512"]
@@ -80,14 +80,17 @@ def check_new_releases(
             if fnmatch.fnmatch(filename, tarball_pattern):
                 tarball_name = filename
                 break
+        print(f"Tarball name: {tarball_name}")
         assert tarball_name
         new_release_version = get_version_from_tarball_name(tarball_name)
+        print(f"new release name: {new_release_version}")
         product_name = new_release_version.split("-")[0]
         product_version = new_release_version.split("-")[1]
         # check them against tags in Github
         related_tags = get_product_tags(
             repository_owner, project_name, product_name, product_version
         )
+        print(f"Related tag: {related_tags}")
         # delete folder with release if already published
         if new_release_version in related_tags:
             folders_to_delete.append(release_directory)
