@@ -114,7 +114,7 @@ jobs:
           cd ${{ env.OUTPUT_DIR }};
           number_of_releases=$( ls . | wc -l )
           echo "Number of remaining releases: $number_of_releases"
-          if [ $number_of_releases < 1 ]; then
+          if [ $number_of_releases -lt 1 ]; then
             echo "Nothing to update!"
             echo "release-package=false" > $GITHUB_OUTPUT
             exit 0
@@ -211,7 +211,7 @@ jobs:
           echo "Tarball name: ${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }} | version: ${{ steps.get-tarball-name.outputs.VERSION }}"
           lp-track=$(${{ steps.get-tarball-name.outputs.TRACK }})
           track-length=$( echo $lp-track | wc -c )
-          if [ $track-length < 3 ]; then
+          if [ $track-length -lt 3 ]; then
             lp-track+="${{ inputs.name }}"
           fi
           echo "lp-track $lp-track"
