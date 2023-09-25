@@ -209,7 +209,7 @@ jobs:
         id: create-new-lp-release
         run: |
           echo "Tarball name: ${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }} | version: ${{ steps.get-tarball-name.outputs.VERSION }}"
-          lp-track=${{ steps.get-tarball-name.outputs.TRACK }}
+          lp-track=$(echo ${{ steps.get-tarball-name.outputs.TRACK }})
           track-length=$( echo $lp-track | wc -c )
           if [ $track-length -lt 3 ]; then
             lp-track+="${{ inputs.name }}"
