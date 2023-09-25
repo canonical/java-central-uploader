@@ -130,7 +130,7 @@ jobs:
         if: ${{ steps.check-release.outputs.release-package == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: releases-${{ inputs.name }}
+          name: releases-${{ inputs.name }}-${{ inputs.lp-building-branch-prefix }}
           path: ${{ env.OUTPUT_DIR }}-${{ inputs.name }}.zip
 
       - name: Generate matrix with all built versions
@@ -158,7 +158,7 @@ jobs:
       - name: Download releases
         uses: actions/download-artifact@v3
         with:
-          name: releases-${{ inputs.name }}
+          name: releases-${{ inputs.name }}-${{ inputs.lp-building-branch-prefix }}
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
