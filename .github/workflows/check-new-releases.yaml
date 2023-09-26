@@ -183,12 +183,15 @@ jobs:
           cd ../../
           ls
           version=$( python3 -m uploader.services get-version -n $tarball_filename )
+          lp_version=$(echo $version | cut -d'-' -f2-)
           track=$(echo "${{ inputs.lp-building-branch-prefix }}" | awk -F '-' '{print $NF}')
 
           echo "VERSION=$version" >> $GITHUB_OUTPUT
+          echo "LP_VERSION=$lp_version" >> $GITHUB_OUTPUT
           echo "TRACK=$track" >> $GITHUB_OUTPUT
           echo "Tarball filename: $tarball_filename"
           echo "Software version: $version"
+          echo  "Launchpad milestone: $lp_version"
           echo "Track: $track"
 
       - name: Create credentials file for Launchpad
@@ -220,7 +223,7 @@ jobs:
             --app "${{ inputs.name }}" \
             --project "${{ inputs.lp-releasing-project }}" \
             --track "$lp_track" \
-            --version "${{ steps.get-tarball-name.outputs.VERSION }}" \
+            --version "${{ steps.get-tarball-name.outputs.LP_VERSION }}" \
             --tarball "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }}" \
             --credentials ${{ env.LP_CREDENTIALS }}
 
