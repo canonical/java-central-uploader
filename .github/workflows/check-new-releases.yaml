@@ -216,7 +216,7 @@ jobs:
           echo "lp_track $lp_track"
           track_length=$( echo $lp_track | wc -c )
           if [ $track_length -lt 3 ]; then
-            lp_track+="${{ inputs.name }}"
+            lp_track+=".x"
           fi
           echo "lp_track $lp_track"
           python3 -m uploader.launchpad_release \
