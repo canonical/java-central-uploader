@@ -114,7 +114,7 @@ jobs:
           cd ${{ env.OUTPUT_DIR }};
           number_of_releases=$( ls . | wc -l )
           echo "Number of remaining releases: $number_of_releases"
-          if [ $number_of_releases < 1 ]; then
+          if [ $number_of_releases -lt 1 ]; then
             echo "Nothing to update!"
             echo "release-package=false" > $GITHUB_OUTPUT
             exit 0
@@ -130,7 +130,7 @@ jobs:
         if: ${{ steps.check-release.outputs.release-package == 'true' }}
         uses: actions/upload-artifact@v3
         with:
-          name: releases-${{ inputs.name }}
+          name: releases-${{ inputs.name }}-${{ inputs.lp-building-branch-prefix }}
           path: ${{ env.OUTPUT_DIR }}-${{ inputs.name }}.zip
 
       - name: Generate matrix with all built versions
@@ -158,7 +158,7 @@ jobs:
       - name: Download releases
         uses: actions/download-artifact@v3
         with:
-          name: releases-${{ inputs.name }}
+          name: releases-${{ inputs.name }}-${{ inputs.lp-building-branch-prefix }}
 
       - name: Install Python dependencies
         run: pip install -r requirements.txt
@@ -183,12 +183,15 @@ jobs:
           cd ../../
           ls
           version=$( python3 -m uploader.services get-version -n $tarball_filename )
+          lp_version=$(echo $version | cut -d'-' -f2-)
           track=$(echo "${{ inputs.lp-building-branch-prefix }}" | awk -F '-' '{print $NF}')
 
           echo "VERSION=$version" >> $GITHUB_OUTPUT
+          echo "LP_VERSION=$lp_version" >> $GITHUB_OUTPUT
           echo "TRACK=$track" >> $GITHUB_OUTPUT
           echo "Tarball filename: $tarball_filename"
           echo "Software version: $version"
+          echo  "Launchpad milestone: $lp_version"
           echo "Track: $track"
 
       - name: Create credentials file for Launchpad
@@ -209,11 +212,18 @@ jobs:
         id: create-new-lp-release
         run: |
           echo "Tarball name: ${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }} | version: ${{ steps.get-tarball-name.outputs.VERSION }}"
+          lp_track=$(echo "${{ steps.get-tarball-name.outputs.TRACK }}")
+          echo "lp_track $lp_track"
+          track_length=$( echo $lp_track | wc -c )
+          if [ $track_length -lt 3 ]; then
+            lp_track+=".x"
+          fi
+          echo "lp_track $lp_track"
           python3 -m uploader.launchpad_release \
             --app "${{ inputs.name }}" \
             --project "${{ inputs.lp-releasing-project }}" \
-            --track "${{ inputs.name }}-${{ steps.get-tarball-name.outputs.TRACK }}" \
-            --version "${{ steps.get-tarball-name.outputs.VERSION }}" \
+            --track "$lp_track" \
+            --version "${{ steps.get-tarball-name.outputs.LP_VERSION }}" \
             --tarball "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }}" \
             --credentials ${{ env.LP_CREDENTIALS }}
 
