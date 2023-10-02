@@ -63,7 +63,7 @@ def create_services_parser(parser: ArgumentParser) -> ArgumentParser:
     parser_check_version.add_argument(
         "-p", "--project-name", type=str, help="Project name.", required=True
     )
-    
+
     parser_check_library_version = subparser.add_parser(
         Actions.CHECK_LIBRARY_VERSION.value,
         help="Check if the name of the library is valid with respect to the published library.",

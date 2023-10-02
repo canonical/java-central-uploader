@@ -42,4 +42,4 @@ jobs:
       lp-consumer-key: ${{ matrix.product.lp-consumer-key }}
       lp-access-token: ${{ matrix.product.lp-access-token }}
       lp-access-secret: ${{ matrix.product.lp-access-secret }}
-      library-regex: ${{ matrix.product.tarball-regex }}
+      library-regex: ${{ matrix.product.library-regex }}
