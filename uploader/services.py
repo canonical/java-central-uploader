@@ -6,6 +6,7 @@ from argparse import ArgumentParser, Namespace
 from enum import Enum
 
 from uploader.utils import (
+    check_new_library,
     check_new_releases,
     get_version_from_tarball_name,
     is_valid_product_name,
@@ -138,7 +139,7 @@ def main(args: Namespace):
             args.project_name,
         )
     elif args.action == Actions.CHECK_LIBRARY_VERSION:
-        check_new_releases(
+        check_new_library(
             args.output_directory,
             args.library_pattern,
             args.repository_owner,
