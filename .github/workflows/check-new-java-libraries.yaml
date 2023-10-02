@@ -165,7 +165,7 @@ jobs:
           echo "LIBRARY_FILENAME=$library_filename" >> $GITHUB_OUTPUT
           version=$(echo "${library_filename%.*}")
           echo "VERSION: $version"
-          echo "VERSION=$VERSION" >> $GITHUB_OUTPUT
+          echo "VERSION=$version" >> $GITHUB_OUTPUT
           cd ../../
           ls
 
