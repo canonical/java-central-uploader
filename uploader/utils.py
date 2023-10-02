@@ -63,6 +63,17 @@ def get_product_tags(
         and is_valid_release_version(t)
     ]
 
+def get_library_tags(
+    repository_owner: str, project_name: str, library_name: str
+):
+    """This function return the tags related to a library."""
+    tags = get_repositories_tags(repository_owner, project_name)
+    return [
+        t
+        for t in tags
+        if t.startswith(f"{library_name}")
+    ]
+
 
 def check_new_releases(
     output_directory: str,
@@ -108,6 +119,38 @@ def check_new_releases(
         logger.info(f"Deleting folder: {folder}")
         shutil.rmtree(f"{output_directory}/{folder}")
 
+def check_new_library(
+    output_directory: str,
+    library_pattern: str,
+    repository_owner: str,
+    project_name: str,
+):
+    """Iterate over most recents libraries and check if they need to be released."""
+    assert output_directory
+    logger.info(f"Analyzing directory: {output_directory}")
+    folders_to_delete = []
+    for release_directory in os.listdir(output_directory):
+        library_name = None
+        for filename in os.listdir(f"{output_directory}/{release_directory}"):
+            if fnmatch.fnmatch(filename, library_pattern):
+                # get library name without extension
+                library_name = filename.rsplit('.', 1)[0]
+                break
+        print(f"Library name: {library_name}")
+        assert library_name
+        # check them against tags in Github
+        related_tags = get_library_tags(
+            repository_owner, project_name, library_name
+        )
+        print(f"Related tag: {related_tags}")
+        # delete folder with release if already published
+        if library_name in related_tags:
+            folders_to_delete.append(release_directory)
+            continue
+
+    for folder in folders_to_delete:
+        logger.info(f"Deleting folder: {folder}")
+        shutil.rmtree(f"{output_directory}/{folder}")
 
 def get_patch_version(release_version: str) -> int:
     """Return the patch version from the release version."""

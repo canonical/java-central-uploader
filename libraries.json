@@ -1,0 +1,12 @@
+[
+    {
+        "name": "spark-metrics",
+        "lp-building-project": "soss",
+        "lp-building-repo": "~data-platform/soss/+source/spark-metrics/+git/spark-metrics/",
+        "lp-building-branch-prefix": "lp-3.4",
+        "lp-consumer-key": "LP_CONSUMER_KEY",
+        "lp-access-token": "LP_ACCESS_TOKEN",
+        "lp-access-secret": "LP_SECRET_TOKEN",
+        "library-regex": "spark-*.jar"
+    }
+]
