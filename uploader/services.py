@@ -140,7 +140,7 @@ def main(args: Namespace):
     elif args.action == Actions.CHECK_LIBRARY_VERSION:
         check_new_releases(
             args.output_directory,
-            args.tarball_pattern,
+            args.library_pattern,
             args.repository_owner,
             args.project_name,
         )
