@@ -6,6 +6,7 @@ from argparse import ArgumentParser, Namespace
 from enum import Enum
 
 from uploader.utils import (
+    check_new_library,
     check_new_releases,
     get_version_from_tarball_name,
     is_valid_product_name,
@@ -19,6 +20,7 @@ class Actions(str, Enum):
     VERSION = "get-version"
     VALID_NAME = "validate-name"
     CHECK_VERSION = "check-releases"
+    CHECK_LIBRARY_VERSION = "check-library-releases"
     UPLOAD = "upload-product-jars"
 
 
@@ -60,6 +62,27 @@ def create_services_parser(parser: ArgumentParser) -> ArgumentParser:
         "-r", "--repository-owner", type=str, help="Repository owner.", required=True
     )
     parser_check_version.add_argument(
+        "-p", "--project-name", type=str, help="Project name.", required=True
+    )
+
+    parser_check_library_version = subparser.add_parser(
+        Actions.CHECK_LIBRARY_VERSION.value,
+        help="Check if the name of the library is valid with respect to the published library.",
+    )
+    parser_check_library_version.add_argument(
+        "-o",
+        "--output-directory",
+        type=str,
+        help="Path of the directory where releases are downloaded.",
+        required=True,
+    )
+    parser_check_library_version.add_argument(
+        "-l", "--library-pattern", type=str, help="Library pattern name.", required=True
+    )
+    parser_check_library_version.add_argument(
+        "-r", "--repository-owner", type=str, help="Repository owner.", required=True
+    )
+    parser_check_library_version.add_argument(
         "-p", "--project-name", type=str, help="Project name.", required=True
     )
 
@@ -112,6 +135,13 @@ def main(args: Namespace):
         check_new_releases(
             args.output_directory,
             args.tarball_pattern,
+            args.repository_owner,
+            args.project_name,
+        )
+    elif args.action == Actions.CHECK_LIBRARY_VERSION:
+        check_new_library(
+            args.output_directory,
+            args.library_pattern,
             args.repository_owner,
             args.project_name,
         )
