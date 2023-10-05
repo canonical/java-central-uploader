@@ -21,13 +21,15 @@ def test_valid_product_name():
     v_3 = "opensearch-2.9.0-ubuntu1-20230821132449-linux-x64.tar.gz"
     v_4 = "spark-3.4.1-ubuntu100-20230821132449-bin-k8s.tgz"
     v_5 = "opensearch-2.8.0-ubuntu0-20230920150138-linux-x64.tar.gz"
+    v_6 = "opensearch-2.10.0-ubuntu0-20231004122318-linux-x64.tar.gz"
+    v_7 = "spark-3.4.1-ubuntu1-20231004201041-bin-k8s.tgz"
     i_1 = "spark-3.4-ubuntu-1-20230821132449-bin.tgz"
     i_2 = "spark-3.4.1-ubuntu-01-20230821132449-bin-k8s.tgz"
     i_3 = "spark-3.4.1-ubuntu-01-20230821132469-bin-.tgz"
     i_4 = "spark-3.4.1-ubuntu01-20230821132439-bin-k8s.tgz"
     i_5 = "spark-3.4.1-ubuntu-1-20230821132449-bin-k8s.tgz"
 
-    valid_names = [v_1, v_2, v_3, v_4, v_5]
+    valid_names = [v_1, v_2, v_3, v_4, v_5, v_6, v_7]
     invalid_names = [i_1, i_2, i_3, i_4, i_5]
 
     for v in valid_names:
