@@ -28,6 +28,20 @@
         "tarball-regex": "kafka*.tgz"
     },
     {
+        "name": "zookeeper",
+        "lp-building-project": "soss",
+        "lp-releasing-project": "zookeeper-releases",
+        "lp-building-repo": "~data-platform/soss/+source/charmed-zookeeper/+git/charmed-zookeeper/",
+        "lp-building-branch-prefix": "lp-3",
+        "lp-consumer-key": "LP_CONSUMER_KEY",
+        "lp-access-token": "LP_ACCESS_TOKEN",
+        "lp-access-secret": "LP_SECRET_TOKEN",
+        "artifactory-url": "https://canonical.jfrog.io/artifactory/dataplatform-maven-local/",
+        "artifactory-user": "ARTIFACTORY_USER",
+        "artifactory-token": "ARTIFACTORY_TOKEN",
+        "tarball-regex": "apache-zookeeper*.tgz"
+    },
+    {
         "name": "opensearch",
         "lp-building-project": "soss",
         "lp-releasing-project": "opensearch-releases",
