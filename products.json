@@ -39,7 +39,7 @@
         "artifactory-url": "https://canonical.jfrog.io/artifactory/dataplatform-maven-local/",
         "artifactory-user": "ARTIFACTORY_USER",
         "artifactory-token": "ARTIFACTORY_TOKEN",
-        "tarball-regex": "apache-zookeeper*.tgz"
+        "tarball-regex": "zookeeper*.tgz"
     },
     {
         "name": "opensearch",
