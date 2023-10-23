@@ -86,17 +86,17 @@ def check_new_releases(
             if fnmatch.fnmatch(filename, tarball_pattern):
                 tarball_name = filename
                 break
-        print(f"Tarball name: {tarball_name}")
+        logger.debug(f"Tarball name: {tarball_name}")
         assert tarball_name
         new_release_version = get_version_from_tarball_name(tarball_name)
-        print(f"new release name: {new_release_version}")
+        logger.debug(f"new release name: {new_release_version}")
         product_name = new_release_version.split("-")[0]
         product_version = new_release_version.split("-")[1]
         # check them against tags in Github
         related_tags = get_product_tags(
             repository_owner, project_name, product_name, product_version
         )
-        print(f"Related tag: {related_tags}")
+        logger.debug(f"Related tag: {related_tags}")
         # delete folder with release if already published
         if new_release_version in related_tags:
             folders_to_delete.append(release_directory)
@@ -132,11 +132,11 @@ def check_new_library(
                 # get library name without extension
                 library_name = filename.rsplit(".", 1)[0]
                 break
-        print(f"Library name: {library_name}")
+        logger.debug(f"Library name: {library_name}")
         assert library_name
         # check them against tags in Github
         related_tags = get_library_tags(repository_owner, project_name, library_name)
-        print(f"Related tag: {related_tags}")
+        logger.debug(f"Related tag: {related_tags}")
         # delete folder with release if already published
         if library_name in related_tags:
             folders_to_delete.append(release_directory)
