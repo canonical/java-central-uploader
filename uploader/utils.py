@@ -187,15 +187,19 @@ def get_jars_in_tarball(tarball_path: str) -> List[str]:
     """Return all the jars contained into a tarball."""
     os.mkdir("tmp")
 
-    with tarfile.open(tarball_path) as file:
-        file.extractall("tmp/")
+    try:
+        with tarfile.open(tarball_path) as file:
+            file.extractall("tmp/")
+    except tarfile.ReadError:
+        with zipfile.ZipFile(tarball_path) as file:
+            file.extractall("tmp/")
 
-        jar_filenames = [
-            filename
-            for _, _, files in os.walk("tmp/")
-            for filename in files
-            if filename.endswith(".jar")
-        ]
+    jar_filenames = [
+        filename
+        for _, _, files in os.walk("tmp/")
+        for filename in files
+        if filename.endswith(".jar")
+    ]
     logger.info(f"Number of jars: {len(jar_filenames)}")
     shutil.rmtree("tmp")
     return jar_filenames
