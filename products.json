@@ -46,7 +46,7 @@
         "lp-building-project": "soss",
         "lp-releasing-project": "opensearch-releases",
         "lp-building-repo": "~data-platform/soss/+source/opensearch-build/+git/opensearch-build/",
-        "lp-building-branch-prefix": "lp-2",
+        "lp-building-branch-prefix": "lp-2.10.0-backup-s3-gcs",
         "lp-consumer-key": "LP_CONSUMER_KEY",
         "lp-access-token": "LP_ACCESS_TOKEN",
         "lp-access-secret": "LP_SECRET_TOKEN",
