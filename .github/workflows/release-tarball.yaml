@@ -1,4 +1,4 @@
-name: Release CI
+name: Release CI (tarball)
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
