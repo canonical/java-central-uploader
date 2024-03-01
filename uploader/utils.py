@@ -86,6 +86,8 @@ def check_new_releases(
             if fnmatch.fnmatch(filename, tarball_pattern):
                 tarball_name = filename
                 break
+        if not tarball_name:
+            continue
         logger.debug(f"Tarball name: {tarball_name}")
         assert tarball_name
         new_release_version = get_version_from_tarball_name(tarball_name)
