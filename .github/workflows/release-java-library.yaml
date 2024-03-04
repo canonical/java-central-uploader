@@ -1,4 +1,4 @@
-name: Release CI
+name: Release CI (java lib)
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
