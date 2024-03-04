@@ -10,6 +10,7 @@ on:
     - cron: '53 0 * * *' # Daily at 00:53 UTC
   workflow_call:
 
+
 jobs:
   setup-matrix:
     runs-on: ubuntu-latest
@@ -40,6 +41,7 @@ jobs:
       lp-releasing-project: ${{ matrix.product.lp-releasing-project }}
       lp-building-repo: ${{ matrix.product.lp-building-repo }}
       lp-building-branch-prefix: ${{ matrix.product.lp-building-branch-prefix }}
+      lp-release-track-name: ${{ matrix.product.lp-release-track-name }}
       lp-consumer-key: ${{ matrix.product.lp-consumer-key }}
       lp-access-token: ${{ matrix.product.lp-access-token }}
       lp-access-secret: ${{ matrix.product.lp-access-secret }}

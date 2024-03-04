@@ -23,6 +23,10 @@ on:
         required: true
         type: string
         description: The prefix of the LP Git branches producing builds of the Product to be released.
+      lp-release-track-name:
+        required: false
+        type: string
+        description: If specified, defines the release track name. Otherwise, lp-building-branch-prefix is used.
       lp-consumer-key:
         required: true
         type: string
@@ -184,7 +188,11 @@ jobs:
           ls
           version=$( python3 -m uploader.services get-version -n $tarball_filename )
           lp_version=$(echo $version | cut -d'-' -f2-)
-          track=$(echo "${{ inputs.lp-building-branch-prefix }}" | awk -F '-' '{print $NF}')
+          if [[ -z "${{ inputs.lp-release-track-name }}" ]]; then
+              track=$(echo "${{ inputs.lp-building-branch-prefix }}" | awk -F '-' '{print $NF}')
+          else
+              track=$(echo "${{ inputs.lp-release-track-name }}" | awk -F '-' '{print $NF}')
+          fi
 
           echo "VERSION=$version" >> $GITHUB_OUTPUT
           echo "LP_VERSION=$lp_version" >> $GITHUB_OUTPUT
