@@ -4,7 +4,7 @@ concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: true
 
-on:
+on: 
   workflow_dispatch:
   schedule:
     - cron: '53 0 * * *' # Daily at 00:53 UTC
