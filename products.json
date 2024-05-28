@@ -55,5 +55,5 @@
         "artifactory-user": "ARTIFACTORY_USER",
         "artifactory-token": "ARTIFACTORY_TOKEN",
         "tarball-regex": "opensearch-*.tar.gz"
-    },
+    }
 ]
