@@ -201,9 +201,10 @@ def main():
         logger.info(f"Start ownloading files for branch {branch}")
         last_run = sorted(runs, key=lambda x: x.date_built, reverse=True)[0]
 
+        # check if the successful build contains the desired artifact
         artifact_exist = False
         for url_file in last_run.artifact_urls:
-            # download each file related to the build
+            # check if tarball is part of the build artifacts
             file_name = unquote(str(url_file).split("/")[-1])
             if fnmatch.fnmatch(file_name, args.tarball_pattern):
                 artifact_exist = True
