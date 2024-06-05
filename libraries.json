@@ -8,15 +8,5 @@
         "lp-access-token": "LP_ACCESS_TOKEN",
         "lp-access-secret": "LP_SECRET_TOKEN",
         "library-regex": "spark-*.jar"
-    },
-    {
-        "name": "hadoop",
-        "lp-building-project": "soss",
-        "lp-building-repo": "~data-platform/soss/+source/hadoop/+git/hadoop/",
-        "lp-building-branch-prefix": "lp-3.3.6",
-        "lp-consumer-key": "LP_CONSUMER_KEY",
-        "lp-access-token": "LP_ACCESS_TOKEN",
-        "lp-access-secret": "LP_SECRET_TOKEN",
-        "library-regex": "hadoop-*ubuntu*.jar"
     }
 ]

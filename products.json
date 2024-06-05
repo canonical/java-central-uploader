@@ -14,6 +14,19 @@
         "tarball-regex": "spark-*.tgz"
     },
     {
+        "name": "hadoop",
+        "lp-building-project": "soss",
+        "lp-building-repo": "~data-platform/soss/+source/hadoop/+git/hadoop/",
+        "lp-building-branch-prefix": "lp-3.3.6",
+        "lp-consumer-key": "LP_CONSUMER_KEY",
+        "lp-access-token": "LP_ACCESS_TOKEN",
+        "lp-access-secret": "LP_SECRET_TOKEN",
+        "artifactory-url": "https://canonical.jfrog.io/artifactory/dataplatform-maven-local/",
+        "artifactory-user": "ARTIFACTORY_USER",
+        "artifactory-token": "ARTIFACTORY_TOKEN",
+        "tarball-regex": "hadoop-*.tar.gz"
+    },
+    {
         "name": "kafka",
         "lp-building-project": "soss",
         "lp-releasing-project": "kafka-releases",
