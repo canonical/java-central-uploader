@@ -5,8 +5,10 @@
 
 import argparse
 import collections
+import fnmatch
 import logging
 import os
+import sys
 import urllib.request
 from argparse import Namespace
 from dataclasses import dataclass
@@ -21,6 +23,7 @@ LP_APP = "data-platform-java-build-app"
 LP_SERVER = "production"
 LP_VERSION = "devel"
 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 
@@ -76,6 +79,9 @@ def parse_args() -> Namespace:
         type=str,
         required=True,
         help="The output folder where the built software will be downloaded.",
+    )
+    parser.add_argument(
+        "--tarball-pattern", type=str, help="Tarball pattern name.", required=True
     )
     return parser.parse_args()
 
@@ -185,15 +191,32 @@ def main():
     # fetch list of builds by branch
     branch_builds = get_build_runs_by_branch(branches)
 
+    logger.info(f"Number of branches detected: {len(branch_builds)}")
+
+    logger.info("Downloading available builts...")
     # iterate over each branch and download locally the latest build
     for branch, runs in branch_builds.items():
         if not runs:
             continue
-
+        logger.info(f"Start ownloading files for branch {branch}")
         last_run = sorted(runs, key=lambda x: x.date_built, reverse=True)[0]
-        download_build_artifacts_by_branch(
-            launchpad, branch, last_run, args.output_folder
-        )
+
+        # check if the successful build contains the desired artifact
+        artifact_exist = False
+        for url_file in last_run.artifact_urls:
+            # check if tarball is part of the build artifacts
+            file_name = unquote(str(url_file).split("/")[-1])
+            if fnmatch.fnmatch(file_name, args.tarball_pattern):
+                artifact_exist = True
+
+        logger.info(f"Artifact exist: {artifact_exist}")
+        if artifact_exist:
+            logger.info(f"Downloading artifacts from branch: {branch}")
+            download_build_artifacts_by_branch(
+                launchpad, branch, last_run, args.output_folder
+            )
+        else:
+            logger.warning(f"Branch {branch} does not contains are artifact!")
 
 
 if __name__ == "__main__":

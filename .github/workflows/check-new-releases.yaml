@@ -104,7 +104,8 @@ jobs:
             --repository-url ${{ inputs.lp-building-repo }} \
             --branch-prefix ${{ inputs.lp-building-branch-prefix }} \
             --credential-file ${{ env.LP_CREDENTIALS }} \
-            --output-folder ${{ env.OUTPUT_DIR }}
+            --output-folder ${{ env.OUTPUT_DIR }} \
+            --tarball-pattern ${{ inputs.tarball-regex }}
       
       - name: Check if products needed to be released
         id: check-release
