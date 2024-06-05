@@ -6,6 +6,7 @@ import logging
 import os
 import re
 import shutil
+import sys
 import tarfile
 import zipfile
 from typing import List
@@ -13,6 +14,7 @@ from typing import List
 import requests
 from requests.auth import HTTPBasicAuth
 
+logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
 PRODUCT_PATTERN = ".*-\\d+[.]\\d+[.]\\d+-ubuntu(0|[1-9][0-9]*)-(20\\d{2})[01][0-9][0-3][0-9][0-2]\\d[0-5]\\d[0-5]\\d\\S*"
@@ -215,8 +217,11 @@ def upload_jars(
     artifactory_password: str,
 ):
     """Upload jars to artifactory."""
+    logger.info("Start the upload process")
     jars_to_upload = get_jars_in_tarball(tarball_path)
+    logger.debug(f"Number of jars to upload: {len(jars_to_upload)}")
     os.mkdir("tmp")
+    logger.info("Extract local maven")
     with zipfile.ZipFile(maven_repository_archive, "r") as zip:
         zip.extractall("tmp/")
 
@@ -228,7 +233,7 @@ def upload_jars(
                 if file in jars_to_upload:
                     logger.info(f"subdir: {subdir}")
                     subdirs.append(subdir)
-
+    logger.debug(f"Number of subdir to upload: {len(subdirs)}")
     for subdir in subdirs:
         files = sorted(os.listdir(subdir), key=file_comparator)
         for file in files:
@@ -247,6 +252,7 @@ def upload_jars(
             assert r.status_code == 201
 
     shutil.rmtree("tmp")
+    logger.info("End of the upload process")
 
 
 def get_version_from_tarball_name(tarball_name: str) -> str:
