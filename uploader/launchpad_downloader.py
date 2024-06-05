@@ -203,7 +203,6 @@ def main():
 
         artifact_exist = False
         for url_file in last_run.artifact_urls:
-            url = _get_tokenized_librarian_url(launchpad, url_file)
             # download each file related to the build
             file_name = unquote(str(url_file).split("/")[-1])
             if fnmatch.fnmatch(file_name, args.tarball_pattern):
