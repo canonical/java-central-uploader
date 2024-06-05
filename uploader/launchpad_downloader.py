@@ -190,9 +190,9 @@ def main():
 
     # fetch list of builds by branch
     branch_builds = get_build_runs_by_branch(branches)
-    
+
     logger.info(f"Number of branches detected: {len(branch_builds)}")
-    
+
     logger.info("Downloading available builts...")
     # iterate over each branch and download locally the latest build
     for branch, runs in branch_builds.items():
@@ -200,15 +200,15 @@ def main():
             continue
         logger.info(f"Start ownloading files for branch {branch}")
         last_run = sorted(runs, key=lambda x: x.date_built, reverse=True)[0]
-        
-        artifact_exist=False
+
+        artifact_exist = False
         for url_file in last_run.artifact_urls:
             url = _get_tokenized_librarian_url(launchpad, url_file)
             # download each file related to the build
             file_name = unquote(str(url_file).split("/")[-1])
             if fnmatch.fnmatch(file_name, args.tarball_pattern):
-                artifact_exist=True
-        
+                artifact_exist = True
+
         logger.info(f"Artifact exist: {artifact_exist}")
         if artifact_exist:
             logger.info(f"Downloading artifacts from branch: {branch}")
