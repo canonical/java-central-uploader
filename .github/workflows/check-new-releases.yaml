@@ -219,6 +219,7 @@ jobs:
 
       - name: Release package on Launchpad
         id: create-new-lp-release
+        if: ${{ inputs.lp-releasing-project != '' }}
         run: |
           echo "Tarball name: ${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }} | version: ${{ steps.get-tarball-name.outputs.VERSION }}"
           lp_track=$(echo "${{ steps.get-tarball-name.outputs.TRACK }}")
