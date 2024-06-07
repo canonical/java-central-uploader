@@ -8,9 +8,8 @@ import re
 import shutil
 import sys
 import zipfile
-from typing import List, Optional, Union
-
 from pathlib import Path
+from typing import List, Optional, Union
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -192,13 +191,12 @@ def iter_paths(folder: Union[str, Path], regex: Optional[re.Pattern] = None):
     folder_path = Path(folder) if isinstance(folder, str) else folder
 
     for root, folders, files in os.walk(folder):
-
         root_path = Path(root).relative_to(folder_path)
 
         if not regex or regex.fullmatch(str(root_path)):
             yield folder_path / root_path
         for file in files:
-            full_path = (root_path / file)
+            full_path = root_path / file
             if not regex or regex.fullmatch(str(full_path)):
                 yield folder_path / full_path
 
