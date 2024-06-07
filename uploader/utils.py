@@ -229,13 +229,13 @@ def upload(
             # skip temp files or metadata
             if file.startswith("_") or file.endswith(".repositories"):
                 continue
-            url = f"{artifactory_repository}{subdir.replace(folder,'')}/{file}"
+            url = f"{artifactory_repository}{subdir.relative_to(folder)}/{file}"
             logger.debug(f"upload url: {url}")
             headers = {"Content-Type": "application/java-application"}
             r = requests.put(
                 url,
                 headers=headers,
-                data=open(f"{subdir}/{file}", "rb"),
+                data=open(subdir / file, "rb"),
                 auth=HTTPBasicAuth(artifactory_username, artifactory_password),
             )
             assert r.status_code == 201
