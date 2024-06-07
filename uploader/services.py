@@ -91,7 +91,7 @@ def create_services_parser(parser: ArgumentParser) -> ArgumentParser:
         help="Upload jars contained in the tarball to artifactory.",
     )
     parser_upload.add_argument(
-        "-t", "--tarball-path", type=str, help="Tarball path.", required=True
+        "-l", "--library-pattern", type=str, help="Library pattern name.", required=True
     )
     parser_upload.add_argument(
         "-r",
