@@ -49,5 +49,5 @@ jobs:
       artifactory-user: ${{ matrix.product.artifactory-user }}
       artifactory-token: ${{ matrix.product.artifactory-token }}
       tarball-regex: ${{ matrix.product.tarball-regex }}
-      library-pattern: ${{ matrix.product.library-pattern }}
+      library-regex: ${{ matrix.product.library-regex }}
 
