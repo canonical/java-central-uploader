@@ -55,6 +55,10 @@ on:
         required: true
         type: string
         description: The regular expression to extract name of the tarball.
+      library-regex:
+        required: true
+        type: string
+        description: The regular expression to extract name of the tarball.
 
 env:
   LP_CREDENTIALS: credentials.txt
@@ -77,6 +81,7 @@ jobs:
           echo "lp-building-repo: ${{ inputs.lp-building-repo }}"
           echo "lp-building-branch-prefix: ${{ inputs.lp-building-branch-prefix }}"
           echo "tarball-regex: ${{ inputs.tarball-regex }}"
+          echo "library-regex: ${{ inputs.library-regex }}"
 
       - name: Create credentials file for Launchpad
         env:
@@ -303,10 +308,11 @@ jobs:
           asset_content_type: application/txt
 
       - name: Upload Java dependencies to artifactory
+        if: ${{ inputs.library-regex != '' }}
         run: |
           python3 -m uploader.services \
             upload-product-jars \
-            --tarball-path "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/${{ steps.get-tarball-name.outputs.TARBALL_FILENAME }}" \
+            --library-pattern "${{ inputs.library-regex }}" \
             --mvn-repository "${{ env.OUTPUT_DIR }}/${{ matrix.version }}/repository.zip" \
             --artifactory-url "${{ inputs.artifactory-url }}" \
             --artifactory-username "${{ secrets[inputs.artifactory-user] }}" \

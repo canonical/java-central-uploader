@@ -24,7 +24,8 @@
         "artifactory-url": "https://canonical.jfrog.io/artifactory/dataplatform-maven-local/",
         "artifactory-user": "ARTIFACTORY_USER",
         "artifactory-token": "ARTIFACTORY_TOKEN",
-        "tarball-regex": "hadoop-*.tar.gz"
+        "tarball-regex": "hadoop-*.tar.gz",
+        "library-regex": "org/apache/hadoop/.*-ubuntu[0-9]+/.*(pom|jar)"
     },
     {
         "name": "kafka",

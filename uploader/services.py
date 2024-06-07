@@ -10,7 +10,7 @@ from uploader.utils import (
     check_new_releases,
     get_version_from_tarball_name,
     is_valid_product_name,
-    upload_jars,
+    upload,
 )
 
 logger = logging.getLogger(__name__)
@@ -146,8 +146,8 @@ def main(args: Namespace):
             args.project_name,
         )
     elif args.action == Actions.UPLOAD:
-        upload_jars(
-            args.tarball_path,
+        upload(
+            args.library_pattern,
             args.mvn_repository,
             args.artifactory_url,
             args.artifactory_username,
