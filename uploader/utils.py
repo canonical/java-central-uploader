@@ -7,9 +7,9 @@ import os
 import re
 import shutil
 import sys
-import tarfile
 import zipfile
-from typing import List
+from pathlib import Path
+from typing import List, Optional, Union
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -187,30 +187,22 @@ def check_next_release_name(
     return True
 
 
-def get_jars_in_tarball(tarball_path: str) -> List[str]:
-    """Return all the jars contained into a tarball."""
-    os.mkdir("tmp")
+def iter_paths(folder: Union[str, Path], regex: Optional[re.Pattern] = None):
+    folder_path = Path(folder) if isinstance(folder, str) else folder
 
-    try:
-        with tarfile.open(tarball_path) as file:
-            file.extractall("tmp/")
-    except tarfile.ReadError:
-        with zipfile.ZipFile(tarball_path) as file:
-            file.extractall("tmp/")
+    for root, folders, files in os.walk(folder):
+        root_path = Path(root).relative_to(folder_path)
 
-    jar_filenames = [
-        filename
-        for _, _, files in os.walk("tmp/")
-        for filename in files
-        if filename.endswith(".jar")
-    ]
-    logger.info(f"Number of jars: {len(jar_filenames)}")
-    shutil.rmtree("tmp")
-    return jar_filenames
+        if not regex or regex.fullmatch(str(root_path)):
+            yield folder_path / root_path
+        for file in files:
+            full_path = root_path / file
+            if not regex or regex.fullmatch(str(full_path)):
+                yield folder_path / full_path
 
 
-def upload_jars(
-    tarball_path: str,
+def upload(
+    file_regex: str,
     maven_repository_archive: str,
     artifactory_repository: str,
     artifactory_username: str,
@@ -218,21 +210,18 @@ def upload_jars(
 ):
     """Upload jars to artifactory."""
     logger.info("Start the upload process")
-    jars_to_upload = get_jars_in_tarball(tarball_path)
-    logger.debug(f"Number of jars to upload: {len(jars_to_upload)}")
     os.mkdir("tmp")
     logger.info("Extract local maven")
     with zipfile.ZipFile(maven_repository_archive, "r") as zip:
         zip.extractall("tmp/")
 
-    subdirs = []
     folder = "tmp/repository/"
-    for subdir, _, files in os.walk(folder):
-        for file in files:
-            if file.endswith(".jar"):
-                if file in jars_to_upload:
-                    logger.info(f"subdir: {subdir}")
-                    subdirs.append(subdir)
+
+    subdirs = {
+        element.parent if element.is_file() else element
+        for element in iter_paths(folder, re.compile(file_regex))
+    }
+
     logger.debug(f"Number of subdir to upload: {len(subdirs)}")
     for subdir in subdirs:
         files = sorted(os.listdir(subdir), key=file_comparator)
@@ -240,13 +229,13 @@ def upload_jars(
             # skip temp files or metadata
             if file.startswith("_") or file.endswith(".repositories"):
                 continue
-            url = f"{artifactory_repository}{subdir.replace(folder,'')}/{file}"
+            url = f"{artifactory_repository}{subdir.relative_to(folder)}/{file}"
             logger.debug(f"upload url: {url}")
             headers = {"Content-Type": "application/java-application"}
             r = requests.put(
                 url,
                 headers=headers,
-                data=open(f"{subdir}/{file}", "rb"),
+                data=open(subdir / file, "rb"),
                 auth=HTTPBasicAuth(artifactory_username, artifactory_password),
             )
             assert r.status_code == 201
