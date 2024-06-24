@@ -9,7 +9,7 @@ import shutil
 import sys
 import zipfile
 from pathlib import Path
-from typing import List, Optional, Union, Iterable
+from typing import List, Optional, Union
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -268,6 +268,7 @@ def iter_pages(url) -> List[dict]:
             yield item
 
         url = r.links["next"]["url"] if "next" in r.links else ""
+
 
 def get_repositories_tags(owner: str, repository_name) -> List[str]:
     """This function return the list of tags in the database."""
