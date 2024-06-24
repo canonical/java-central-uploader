@@ -9,7 +9,7 @@ import shutil
 import sys
 import zipfile
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import List, Optional, Union, Iterable
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -256,16 +256,24 @@ def get_version_from_tarball_name(tarball_name: str) -> str:
         raise ValueError("ERROR")
 
 
+def iter_pages(url) -> List[dict]:
+    """Iterate over the elements across the pages of a paginated endpoint."""
+
+    while url:
+        r = requests.get(url)
+        logger.debug(f"status code: {r.status_code}")
+        assert r.status_code == 200
+
+        for item in r.json():
+            yield item
+
+        url = r.links["next"]["url"] if "next" in r.links else ""
+
 def get_repositories_tags(owner: str, repository_name) -> List[str]:
     """This function return the list of tags in the database."""
     url = f"https://api.github.com/repos/{owner}/{repository_name}/tags"
-    logger.debug(f"url: {url}")
-    r = requests.get(url)
-    logger.debug(f"status code: {r.status_code}")
-    assert r.status_code == 200
-    items = r.json()
     tags = []
-    for item in items:
+    for item in iter_pages(url):
         if "name" in item:
             tags.append(item["name"])
         else:
