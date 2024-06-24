@@ -9,7 +9,7 @@ import shutil
 import sys
 import zipfile
 from pathlib import Path
-from typing import List, Optional, Union
+from typing import Iterator, List, Optional, Union
 
 import requests
 from requests.auth import HTTPBasicAuth
@@ -256,7 +256,7 @@ def get_version_from_tarball_name(tarball_name: str) -> str:
         raise ValueError("ERROR")
 
 
-def iter_pages(url) -> List[dict]:
+def iter_pages(url) -> Iterator[dict]:
     """Iterate over the elements across the pages of a paginated endpoint."""
 
     while url:
