@@ -256,7 +256,7 @@ def get_version_from_tarball_name(tarball_name: str) -> str:
         raise ValueError("ERROR")
 
 
-def iter_pages(url) -> Iterator[dict]:
+def iter_pages(url: str) -> Iterator[dict]:
     """Iterate over the elements across the pages of a paginated endpoint."""
 
     while url:
