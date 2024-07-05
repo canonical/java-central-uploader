@@ -1,6 +1,6 @@
 [
     {
-        "name": "spark",
+        "name": "spark-3.5.1",
         "lp-building-project": "soss",
         "lp-releasing-project": "spark-releases",
         "lp-building-repo": "~data-platform/soss/+source/charmed-spark/+git/charmed-spark/",
