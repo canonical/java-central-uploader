@@ -24,13 +24,14 @@ def test_valid_product_name():
     v_6 = "opensearch-2.10.0-ubuntu0-20231004122318-linux-x64.tar.gz"
     v_7 = "spark-3.4.1-ubuntu1-20231004201041-bin-k8s.tgz"
     v_8 = "kafka_2.13-3.5.1-ubuntu0-20231004130455.tgz"
+    v_9 = "spark-4.0.0-preview1-ubuntu0-20240813100410-bin-k8s.tgz"
     i_1 = "spark-3.4-ubuntu-1-20230821132449-bin.tgz"
     i_2 = "spark-3.4.1-ubuntu-01-20230821132449-bin-k8s.tgz"
     i_3 = "spark-3.4.1-ubuntu-01-20230821132469-bin-.tgz"
     i_4 = "spark-3.4.1-ubuntu01-20230821132439-bin-k8s.tgz"
     i_5 = "spark-3.4.1-ubuntu-1-20230821132449-bin-k8s.tgz"
 
-    valid_names = [v_1, v_2, v_3, v_4, v_5, v_6, v_7, v_8]
+    valid_names = [v_1, v_2, v_3, v_4, v_5, v_6, v_7, v_8, v_9]
     invalid_names = [i_1, i_2, i_3, i_4, i_5]
 
     for v in valid_names:
@@ -48,15 +49,17 @@ def test_get_version_tarball_name():
     v_3 = "opensearch-2.9.0-ubuntu1-20230821132449-linux-x64.tar.gz"
     v_4 = "spark-3.4.1-ubuntu100-20230821132449-bin.tgz"
     v_5 = "opensearch-2.8.0-ubuntu0-20230920150138-linux-x64.tar.gz"
+    v_6 = "spark-4.0.0-preview1-ubuntu0-20240813100410-bin-k8s.tgz"
 
     t_1 = "spark-3.4.1-ubuntu0"
     t_2 = "spark-3.3.1-ubuntu1"
     t_3 = "opensearch-2.9.0-ubuntu1"
     t_4 = "spark-3.4.1-ubuntu100"
     t_5 = "opensearch-2.8.0-ubuntu0"
+    t_6 = "spark-4.0.0-preview1-ubuntu0"
 
-    tarball_names = [v_1, v_2, v_3, v_4, v_5]
-    tags = [t_1, t_2, t_3, t_4, t_5]
+    tarball_names = [v_1, v_2, v_3, v_4, v_5, v_6]
+    tags = [t_1, t_2, t_3, t_4, t_5, t_6]
 
     for idx, tarball_name in enumerate(tarball_names):
         assert get_version_from_tarball_name(tarball_name) == tags[idx]
