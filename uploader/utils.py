@@ -17,9 +17,9 @@ from requests.auth import HTTPBasicAuth
 logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 logger = logging.getLogger(__name__)
 
-PRODUCT_PATTERN = ".*-\\d+[.]\\d+[.]\\d+-ubuntu(0|[1-9][0-9]*)-(20\\d{2})[01][0-9][0-3][0-9][0-2]\\d[0-5]\\d[0-5]\\d\\S*"
+PRODUCT_PATTERN = ".*-\\d+[.]\\d+[.]\\d+.*-ubuntu(0|[1-9][0-9]*)-(20\\d{2})[01][0-9][0-3][0-9][0-2]\\d[0-5]\\d[0-5]\\d\\S*"
 TAG_PATTERN = "-(20\\d{2})[01][0-9][0-3][0-9][0-2]\\d[0-5]\\d[0-5]\\d\\S*"
-RELEASE_VERSION = ".*-\\d+[.]\\d+[.]\\d+-ubuntu(0|[1-9][0-9]*)"
+RELEASE_VERSION = ".*-\\d+[.]\\d+[.]\\d+.*-ubuntu(0|[1-9][0-9]*)"
 
 CUSTOM_KEYMAP = [".jar", ".pom", ".sha1", ".sha256", ".sha512"]
 
