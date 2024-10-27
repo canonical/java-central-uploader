@@ -70,7 +70,7 @@ jobs:
         run: |
           cd hadoop
           cd ie-tests
-          branch=${{ matrix.branch }}
+          branch=${{matrix.branch}}
           echo "Branch: $branch"
           if [ -z "$branch" ];
           then 
