@@ -64,14 +64,20 @@ jobs:
           ls -larth
           uuid=$(uuidgen)
           echo "uuid=$uuid" >> $GITHUB_OUTPUT
-      
+
       - name: Run integration test
         timeout-minutes: 900
         run: |
           cd hadoop
           cd ie-tests
+          branch=${{ matrix.branch }}
+          if [ -z "$branch" ];
+          then 
+            branch=lp-3.3.6"
+          fi
+          echo "Branch: $branch"
           ls
-          /bin/bash run.sh ${{ matrix.branch }}
+          /bin/bash run.sh $branch
           ls
           echo "End of the test"
           zip -r logs-${{steps.uuid.outputs.uuid }}.zip logs
@@ -99,7 +105,7 @@ jobs:
         run: |
           # install requirements
           pip install -r requirements.txt
-      - name: Get results
+      - name: Print results
         run: |
           # run the validate script
           python3 -m ie-tests.validate  -a "results/"

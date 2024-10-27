@@ -2,7 +2,7 @@ name: Run Spark tests
 
 on:
   workflow_call:
-  # pull_request:
+  pull_request:
   workflow_dispatch:
     inputs:
       base_branch:
@@ -64,8 +64,14 @@ jobs:
         run: |
           cd charmed-spark
           cd ie-tests
+          branch=${{ matrix.branch }}
+          if [ -z "$branch" ];
+          then 
+            branch=lp-3.4.2"
+          fi
+          echo "Branch: $branch"
           ls
-          /bin/bash run.sh ${{ matrix.branch }}
+          /bin/bash run.sh $branch
           ls
           echo "End of the test"
           zip -r logs-${{steps.uuid.outputs.uuid }}.zip logs

@@ -4,7 +4,7 @@ function run_tests(){
     echo "START TEST"
     IE_FOLDER=$(pwd)
 
-    SPARK_FOLDER="${IE_FOLDER}/.."
+    FOLDER="${IE_FOLDER}/.."
 
     DATE=$(date +%Y%m%dH%HM%M)
     BRANCH=$(git rev-parse --abbrev-ref HEAD)
@@ -21,7 +21,7 @@ function run_tests(){
     echo "" >> $STD_ERR
 
     echo "***************************************" > $STD_OUT
-    echo "      HADOOP INTEGRATION TESTS" >> $STD_OUT
+    echo "     INTEGRATION TESTS" >> $STD_OUT
     echo "***************************************" >> $STD_OUT
     echo "" >> $STD_OUT
     echo "Date: ${DATE}" >> $STD_OUT
@@ -35,7 +35,7 @@ function run_tests(){
     FORMAT_TIME="\n***************************************\nTIMINGS:\n%E real\n%U user\n%S sys"
     ls
     echo "Before running the test!"
-    ./tests.sh "${SPARK_FOLDER}" >> $STD_OUT 2> $STD_ERR
+    ./tests.sh "${FOLDER}" >> $STD_OUT 2> $STD_ERR
 
     echo "***************************************" >> $STD_OUT
 }
