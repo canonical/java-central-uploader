@@ -49,7 +49,7 @@ ignore_missing_imports = true
 [tool.poetry]
 name = "uploader"
 version = "0.0.1"
-description = "This project is responsible for uploading build java prodcuts to Github and Launchpad"
+description = "This project is responsible for uploading build java products to Github and Launchpad"
 authors = [
     "Paolo Sottovia <paolo.sottovia@canonical.com>",
     "Mehdi Bendriss <mehdi.bendriss@canonical.com>"

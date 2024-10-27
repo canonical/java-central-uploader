@@ -198,7 +198,7 @@ def main():
     for branch, runs in branch_builds.items():
         if not runs:
             continue
-        logger.info(f"Start ownloading files for branch {branch}")
+        logger.info(f"Start downloading files for branch {branch}")
         last_run = sorted(runs, key=lambda x: x.date_built, reverse=True)[0]
 
         # check if the successful build contains the desired artifact

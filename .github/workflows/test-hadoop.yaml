@@ -3,6 +3,16 @@ name: Run hadoop tests
 on:
   workflow_call:
   pull_request:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Base branch'
+        required: true
+        default: 'lp-3.3.6'
+      feature_branch:
+        description: 'Feature branch'
+        required: true
+        default: 'lp-3.3.6'
 
 jobs:
   test:
@@ -12,10 +22,10 @@ jobs:
       fail-fast: false
       matrix:
         branch:
-          - "release-3.3.6-ubuntu2"
-          - "release-3.3.6-ubuntu2"
-          - "release-3.3.6-ubuntu2"
-          - "lp-3.3.6"
+          - '${{ github.event.inputs.base_branch }}'
+          - '${{ github.event.inputs.feature_branch }}'
+          - '${{ github.event.inputs.feature_branch }}'
+          - '${{ github.event.inputs.feature_branch }}'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
