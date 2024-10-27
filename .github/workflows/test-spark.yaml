@@ -68,7 +68,7 @@ jobs:
           echo "Branch: $branch" 
           if [ -z "$branch" ];
           then 
-            branch=lp-3.4.2"
+            branch="lp-3.4.2"
           fi
           echo "Branch: $branch"
           ls
