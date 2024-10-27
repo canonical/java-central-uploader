@@ -1,0 +1,109 @@
+name: Run Spark tests
+
+on:
+  workflow_call:
+  # pull_request:
+  workflow_dispatch:
+    inputs:
+      base_branch:
+        description: 'Base branch'
+        required: true
+        default: 'lp-3.4.2'
+      feature_branch:
+        description: 'Feature branch'
+        required: true
+        default: 'lp-3.4.2'
+
+jobs:
+  test:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 1440
+    strategy:
+      fail-fast: false
+      matrix:
+        branch:
+          - '${{ github.event.inputs.base_branch }}'
+          - '${{ github.event.inputs.feature_branch }}'
+          - '${{ github.event.inputs.feature_branch }}'
+          - '${{ github.event.inputs.feature_branch }}'
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Install dependencies
+        run: |
+          sudo snap install yq
+          sudo apt-get update
+          sudo apt-get -y install openjdk-17-jdk
+          sudo apt-get -y install maven
+      - name: ssh agent
+        uses: webfactory/ssh-agent@v0.9.0
+        with:
+          ssh-private-key: ${{ secrets.SSH_KEY }}
+      - name: Clone repo
+        run: |
+          ls ~/
+          # sudo mkdir ~/.ssh        
+          # ls ~/.ssh/
+          ssh-keyscan -t rsa git.launchpad.net >> ~/.ssh/known_hosts
+          echo "cloning..."
+          git clone --progress --verbose ${{ secrets.REPO_SPARK_URL }}
+          echo "cloned!"
+          cp -r ie-tests charmed-spark
+      - name: Generate uuid
+        id: uuid
+        timeout-minutes: 5
+        run: |
+          ls
+          ls -larth
+          uuid=$(uuidgen)
+          echo "uuid=$uuid" >> $GITHUB_OUTPUT
+      
+      - name: Run integration test
+        timeout-minutes: 900
+        run: |
+          cd charmed-spark
+          cd ie-tests
+          ls
+          /bin/bash run.sh ${{ matrix.branch }}
+          ls
+          echo "End of the test"
+          zip -r logs-${{steps.uuid.outputs.uuid }}.zip logs
+
+      - name: Upload locally built artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-logs-${{steps.uuid.outputs.uuid }}
+          path: charmed-spark/ie-tests/logs-${{steps.uuid.outputs.uuid }}.zip
+  validation:
+    runs-on: ubuntu-22.04
+    timeout-minutes: 15
+    needs:
+      test
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Checkout results
+        uses: actions/download-artifact@v4
+        with:
+          path: results/
+          pattern: integration-test-logs-*
+          merge-multiple: true
+      - name: Install python dependencies
+        run: |
+          # install requirements
+          pip install -r requirements.txt
+      - name: Get results
+        run: |
+          # run the validate script
+          python3 -m ie-tests.validate  -a "results/"
+          echo "Analyis finished"
+      - name: Upload results
+        run: |
+          zip -r all-results.zip results
+          echo "END"
+      - name: Upload all tests logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: integration-test-logs-uuid
+          path: all-results.zip
