@@ -22,10 +22,10 @@ jobs:
       fail-fast: false
       matrix:
         branch:
-          - '${{ github.event.inputs.base_branch }}'
-          - '${{ github.event.inputs.feature_branch }}'
-          - '${{ github.event.inputs.feature_branch }}'
-          - '${{ github.event.inputs.feature_branch }}'
+          - '${{github.event.inputs.base_branch}}'
+          - '${{github.event.inputs.feature_branch}}'
+          - '${{github.event.inputs.feature_branch}}'
+          - '${{github.event.inputs.feature_branch}}'
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -74,7 +74,7 @@ jobs:
           echo "Branch: $branch"
           if [ -z "$branch" ];
           then 
-            branch=lp-3.3.6"
+            branch="lp-3.3.6"
           fi
           echo "Branch: $branch"
           ls
