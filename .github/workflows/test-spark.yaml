@@ -65,6 +65,7 @@ jobs:
           cd charmed-spark
           cd ie-tests
           branch=${{ matrix.branch }}
+          echo "Branch: $branch" 
           if [ -z "$branch" ];
           then 
             branch=lp-3.4.2"

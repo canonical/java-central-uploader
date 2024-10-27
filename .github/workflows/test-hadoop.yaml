@@ -71,6 +71,7 @@ jobs:
           cd hadoop
           cd ie-tests
           branch=${{ matrix.branch }}
+          echo "Branch: $branch"
           if [ -z "$branch" ];
           then 
             branch=lp-3.3.6"
