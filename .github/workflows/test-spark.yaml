@@ -69,7 +69,7 @@ jobs:
         timeout-minutes: 900
         env:
           USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          PASSWORKD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
         run: |
           # echo "Setup custom settings.xml"
@@ -94,7 +94,7 @@ jobs:
         timeout-minutes: 15
         env:
           USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          PASSWORKD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+          PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
         uses: mxschmitt/action-tmate@v3
 
