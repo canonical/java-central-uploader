@@ -90,13 +90,13 @@ jobs:
           ls
           echo "End of the test"
           zip -r logs-${{steps.uuid.outputs.uuid }}.zip logs
-      - name: Setup tmate session
-        timeout-minutes: 15
-        env:
-          USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-          PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-          ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
-        uses: mxschmitt/action-tmate@v3
+      # - name: Setup tmate session
+      #   timeout-minutes: 15
+      #   env:
+      #     USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
+      #     PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
+      #     ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
+      #   uses: mxschmitt/action-tmate@v3
 
       - name: Upload locally built artifact
         uses: actions/upload-artifact@v4
