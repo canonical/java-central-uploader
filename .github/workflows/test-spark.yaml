@@ -67,6 +67,10 @@ jobs:
       
       - name: Run integration test
         timeout-minutes: 900
+        env:
+          USERNAME: ${{ secrets.ARTIFACTORY_USER }}
+          PASSWORKD: ${{ secrets.ARTIFACTORY_TOKEN }}
+          ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
         run: |
           cd charmed-spark
           cd ie-tests
@@ -77,10 +81,7 @@ jobs:
             branch="lp-3.4.2"
           fi
           echo "Branch: $branch"
-          ls
-          export USERNAME=${{secrets.ARTIFACTORY_USER}}
-          export PASSWORKD=${{secrets.ARTIFACTORY_TOKEN}}
-          export ARTIFACTORY_URL=${{secrets.SPARK_ARTIFACTORY_URL}}
+          ls         
           /bin/bash run.sh $branch
           ls
           echo "End of the test"
