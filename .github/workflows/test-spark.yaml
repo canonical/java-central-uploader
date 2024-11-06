@@ -72,6 +72,10 @@ jobs:
           PASSWORKD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
         run: |
+          echo "Setup custom settings.xml"
+          mkdir ~/.m2
+          mv ie-tests/settings.xml  ~/.m2/settings.xml
+          # 
           cd charmed-spark
           cd ie-tests
           branch=${{ matrix.branch }}
