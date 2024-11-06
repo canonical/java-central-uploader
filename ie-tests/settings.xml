@@ -1,0 +1,63 @@
+<settings xmlns="http://maven.apache.org/SETTINGS/1.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xsi:schemaLocation="http://maven.apache.org/SETTINGS/1.0.0 https://maven.apache.org/xsd/settings-1.0.0.xsd">
+  <servers>
+    <server>
+      <username>${env.USERNAME}</username>
+      <password>${env.PASSWORD}</password>
+      <id>central</id>
+    </server>
+    <server>
+      <username>${env.USERNAME}</username>
+      <password>${env.PASSWORD}</password>
+      <id>snapshots</id>
+    </server>
+  </servers>
+  <profiles>
+    <profile>
+      <repositories>
+        <repository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>dataplatform-spark</name>
+          <url>${env.ARTIFACTORY_URL}</url>
+        </repository>
+	<repository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>dataplatform-spark</name>
+          <url>${env.ARTIFACTORY_URL}</url>
+        </repository>
+      </repositories>
+      <pluginRepositories>
+        <pluginRepository>
+          <snapshots>
+            <enabled>false</enabled>
+          </snapshots>
+          <id>central</id>
+          <name>dataplatform-spark</name>
+          <url>${env.ARTIFACTORY_URL}</url>
+        </pluginRepository>
+        <pluginRepository>
+          <snapshots />
+          <id>snapshots</id>
+          <name>dataplatform-spark</name>
+          <url>${env.ARTIFACTORY_URL}</url>
+        </pluginRepository>
+      </pluginRepositories>
+      <id>artifactory</id>
+    </profile>
+  </profiles>
+  <activeProfiles>
+    <activeProfile>artifactory</activeProfile>
+  </activeProfiles>
+  <mirrors>
+    <mirror>
+      <id>central</id>
+      <name>Maven Repository Manager running on canonical.jfrog.io</name>
+      <url>${env.ARTIFACTORY_URL}</url>
+      <mirrorOf>*</mirrorOf>
+    </mirror>
+  </mirrors>
+</settings>
