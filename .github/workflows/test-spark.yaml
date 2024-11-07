@@ -1,5 +1,9 @@
 name: Run Spark tests
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 on:
   workflow_call:
   pull_request:
@@ -76,8 +80,9 @@ jobs:
           # mkdir ~/.m2
           # mv ie-tests/settings.xml  ~/.m2/settings.xml
           # 
+          which java
           # set java version to Java 17
-          update-java-alternatives -s $(update-java-alternatives -l | grep '1\.8' | cut -d " " -f1) || echo '.'
+          update-java-alternatives -s $(update-java-alternatives -l | grep '1\.17' | cut -d " " -f1) || echo '.'
           java -version
           cd charmed-spark
           cd ie-tests
