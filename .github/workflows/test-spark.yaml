@@ -76,6 +76,9 @@ jobs:
           # mkdir ~/.m2
           # mv ie-tests/settings.xml  ~/.m2/settings.xml
           # 
+          # set java version to Java 17
+          update-java-alternatives -s $(update-java-alternatives -l | grep '1\.8' | cut -d " " -f1) || echo '.'
+          java -version
           cd charmed-spark
           cd ie-tests
           branch=${{ matrix.branch }}
