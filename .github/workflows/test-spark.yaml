@@ -83,7 +83,10 @@ jobs:
           which java
           # set java version to Java 17
           sudo update-java-alternatives -s $(sudo update-java-alternatives -l | grep '1\.17' | cut -d " " -f1) || echo '.'
+          echo "Java version"
           java -version
+          echo "Maven version"
+          mvn -version
           cd charmed-spark
           cd ie-tests
           branch=${{ matrix.branch }}
