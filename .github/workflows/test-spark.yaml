@@ -85,6 +85,7 @@ jobs:
           sudo update-java-alternatives -s $(sudo update-java-alternatives -l | grep '1\.17' | cut -d " " -f1) || echo '.'
           echo "Java version"
           java -version
+          export JAVA_HOME=/usr/lib/jvm/java-1.17.0-openjdk-amd64/
           echo "Maven version"
           mvn -version
           cd charmed-spark
