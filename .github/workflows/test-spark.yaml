@@ -137,7 +137,7 @@ jobs:
       - name: Get results
         run: |
           # run the validate script
-          python3 -m ie-tests.validate  -a "results/"
+          python3 -m ie-tests.validate_spark  -a "results/"
           echo "Analyis finished"
       - name: Upload results
         run: |

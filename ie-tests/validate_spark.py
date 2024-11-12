@@ -33,6 +33,7 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "-a", "--archive-logs", help="Path to the archive where run logs are stored."
     )
+
     return parser.parse_args()
 
 
@@ -46,6 +47,7 @@ if __name__ == "__main__":
     log_results = {}
     log_errors = {}
     log_tests = {}
+    log_failed = {}
     print(f"Number of runs: {len(logs_archives)}")
     for log_archive in logs_archives:
         # Extract zip file and extract key stats.
@@ -62,6 +64,7 @@ if __name__ == "__main__":
                         log_results[log_file] = []
                         log_errors[log_file] = []
                         log_tests[log_file] = []
+                        log_failed[log_file] = []
                         # here
                         print("log file name: " + log_file)
                         with open(f"{log_directory}/{log_file}", "r") as file:
@@ -69,21 +72,25 @@ if __name__ == "__main__":
                             for line in file:
                                 clean_line = remove_ascii_colors(line.strip())
                                 lines.append(clean_line)
-                                if "Tests run" in clean_line and "-" in clean_line:
+                                if "*** FAILED ***" in clean_line:
+                                    log_failed[log_file].append(clean_line)
 
+                                if "-" in clean_line:
                                     test_name = clean_line.split("-")[1].strip()
                                     log_tests[log_file].append(test_name)
-                                    if "FAILURE" in clean_line:
+
+                                if "Tests:" in clean_line:
+                                    if "FAILURE" in clean_line and "-" in clean_line:
                                         log_errors[log_file].append(
                                             clean_line.split("-")[1]
                                         )
-
                                     items = clean_line.split(",")
-                                    run = int(items[0].split(":")[1])
-                                    failures = int(items[1].split(":")[1])
-                                    errors = int(items[2].split(":")[1])
-                                    skipped = int(items[3].split(":")[1])
-                                    r = (run, failures, errors, skipped)
+                                    succeeded = int(items[0].split(" ")[-1])
+                                    failed = int(items[1].split(" ")[-1])
+                                    canceled = int(items[2].split(" ")[-1])
+                                    ignored = int(items[3].split(" ")[-1])
+                                    pending = int(items[4].split(" ")[-1])
+                                    r = (succeeded, failed, canceled, ignored, pending)
 
                                     log_results[log_file].append(r)
                     # write cleanup file for debug purposes.
@@ -94,25 +101,59 @@ if __name__ == "__main__":
     table = PrettyTable()
     table.field_names = [
         "Test",
-        "Run",
+        "Succeeded",
         "Failed",
-        "Errors",
-        "Skipped",
+        "Canceled",
+        "Ignored",
+        "Pending",
         "Total",
         "Executed test modules",
+        "Failed Tests",
     ]
 
     for file, results in log_results.items():
-        r = 0
-        f = 0
-        e = 0
-        s = 0
+        succeeded = 0
+        failed = 0
+        canceled = 0
+        ignored = 0
+        pending = 0
         for res in results:
-            r += res[0]
-            f += res[1]
-            e += res[2]
-            s += res[3]
-        table.add_row([file, r, f, e, s, r + f + e + s, len(log_tests[file])])
+            succeeded += res[0]
+            failed += res[1]
+            canceled += res[2]
+            ignored += res[3]
+            pending += res[4]
+        total = succeeded + failed + canceled + ignored + pending
+        table.add_row(
+            [
+                file,
+                succeeded,
+                failed,
+                canceled,
+                ignored,
+                pending,
+                total,
+                len(log_tests[file]),
+                len(log_failed[file]),
+            ]
+        )
 
     print(table)
+    # print failed tests over the runs
+    print("\n\n")
+    print("Failed tests:")
+    for file, _ in log_results.items():
+        print(
+            "---------------------------------------------------------------------------"
+        )
+        print(f"Filename: {file}")
+        print(f"Number of failed tests: {len(log_failed[file])}")
+        print(
+            "==========================================================================="
+        )
+        for failed_test in log_failed[file]:
+            print(f"\t {failed_test}")
+        print(
+            "---------------------------------------------------------------------------"
+        )
     print("End of the process.")
