@@ -1,4 +1,4 @@
-name: Run Spark tests
+name: Run Spark integration tests
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -6,30 +6,35 @@ concurrency:
 
 on:
   workflow_call:
-  pull_request:
   workflow_dispatch:
     inputs:
-      base_branch:
-        description: 'Base branch'
+      branches:
+        description: 'Comma-separated list of branches to test'
         required: true
-        default: 'lp-3.4.2'
-      feature_branch:
-        description: 'Feature branch'
-        required: true
-        default: 'lp-3.4.2'
+        default: 'lp-3.4.2,lp-3.4.2,lp-3.4.2'
 
 jobs:
-  test:
+
+  prepare_matrix:
+    name: Prepare matrix
+    runs-on: ubuntu-22.04
+    steps:
+      - id: setup_matrix
+        run: |
+          input=${{ inputs.branches }}
+          echo "matrix=[\"${input//,/\",\"}\"]" >> $GITHUB_OUTPUT
+          echo "[\"${input//,/\",\"}\"]"
+    outputs:
+      matrix: ${{ steps.setup_matrix.outputs.matrix }}
+
+  test_spark:
+    needs: prepare_matrix
     runs-on: ubuntu-22.04
     timeout-minutes: 1440
     strategy:
       fail-fast: false
       matrix:
-        branch:
-          - '${{ github.event.inputs.base_branch }}'
-          - '${{ github.event.inputs.feature_branch }}'
-          - '${{ github.event.inputs.feature_branch }}'
-          - '${{ github.event.inputs.feature_branch }}'
+        branch: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -46,9 +51,6 @@ jobs:
           ssh-private-key: ${{ secrets.SSH_KEY }}
       - name: Clone repo
         run: |
-          ls ~/
-          # sudo mkdir ~/.ssh        
-          # ls ~/.ssh/
           ssh-keyscan -t rsa git.launchpad.net >> ~/.ssh/known_hosts
           echo "cloning..."
           git clone --progress --verbose ${{ secrets.REPO_SPARK_URL }}
@@ -58,8 +60,7 @@ jobs:
         id: uuid
         timeout-minutes: 5
         run: |
-          ls
-          ls -larth
+          # Generate uuid
           uuid=$(uuidgen)
           echo "uuid=$uuid" >> $GITHUB_OUTPUT
 
@@ -76,10 +77,7 @@ jobs:
           PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
           ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
         run: |
-          # echo "Setup custom settings.xml"
-          # mkdir ~/.m2
-          # mv ie-tests/settings.xml  ~/.m2/settings.xml
-          # 
+          echo "Check Java version"
           which java
           # set java version to Java 17
           sudo update-java-alternatives -s $(sudo update-java-alternatives -l | grep '1\.17' | cut -d " " -f1) || echo '.'
@@ -96,19 +94,11 @@ jobs:
           then 
             branch="lp-3.4.2"
           fi
-          echo "Branch: $branch"
-          ls         
+          echo "Branch to test: $branch"         
           /bin/bash run.sh $branch
-          ls
           echo "End of the test"
+          # compress logs to final upload
           zip -r logs-${{steps.uuid.outputs.uuid }}.zip logs
-      # - name: Setup tmate session
-      #   timeout-minutes: 15
-      #   env:
-      #     USERNAME: ${{ secrets.ARTIFACTORY_USERNAME }}
-      #     PASSWORD: ${{ secrets.ARTIFACTORY_PASSWORD }}
-      #     ARTIFACTORY_URL: ${{ secrets.SPARK_ARTIFACTORY_URL }}
-      #   uses: mxschmitt/action-tmate@v3
 
       - name: Upload locally built artifact
         uses: actions/upload-artifact@v4
@@ -120,7 +110,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     needs:
-      test
+      test_spark
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -134,12 +124,12 @@ jobs:
         run: |
           # install requirements
           pip install -r requirements.txt
-      - name: Get results
+      - name: Print results
         run: |
           # run the validate script
           python3 -m ie-tests.validate_spark  -a "results/"
           echo "Analyis finished"
-      - name: Upload results
+      - name: Compress logs
         run: |
           zip -r all-results.zip results
           echo "END"

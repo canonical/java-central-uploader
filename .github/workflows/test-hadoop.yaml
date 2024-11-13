@@ -1,4 +1,4 @@
-name: Run hadoop tests
+name: Run hadoop integration tests
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
@@ -6,30 +6,36 @@ concurrency:
 
 on:
   workflow_call:
-  # pull_request:
   workflow_dispatch:
     inputs:
-      base_branch:
-        description: 'Base branch'
+      branches:
+        description: 'Comma-separated list of branches to test'
         required: true
-        default: 'lp-3.3.6'
-      feature_branch:
-        description: 'Feature branch'
-        required: true
-        default: 'lp-3.3.6'
+        default: 'lp-3.3.6,lp-3.3.6,lp-3.3.6'
+
 
 jobs:
-  test:
+  prepare_matrix:
+    name: Prepare matrix
+    runs-on: ubuntu-22.04
+    steps:
+      - id: setup_matrix
+        run: |
+          input=${{ inputs.branches }}
+          echo "matrix=[\"${input//,/\",\"}\"]" >> $GITHUB_OUTPUT
+          echo "[\"${input//,/\",\"}\"]"
+    outputs:
+      matrix: ${{ steps.setup_matrix.outputs.matrix }}
+
+  test_hadoop:
+    needs: prepare_matrix
     runs-on: [self-hosted, linux, X64, large, jammy]
     timeout-minutes: 1440
     strategy:
       fail-fast: false
       matrix:
-        branch:
-          - '${{github.event.inputs.base_branch}}'
-          - '${{github.event.inputs.feature_branch}}'
-          - '${{github.event.inputs.feature_branch}}'
-          - '${{github.event.inputs.feature_branch}}'
+        branch: ${{fromJson(needs.prepare_matrix.outputs.matrix)}}
+
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -96,7 +102,7 @@ jobs:
     runs-on: ubuntu-22.04
     timeout-minutes: 15
     needs:
-      test
+      test_hadoop
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -115,7 +121,7 @@ jobs:
           # run the validate script
           python3 -m ie-tests.validate  -a "results/"
           echo "Analyis finished"
-      - name: Upload results
+      - name: Compress logs
         run: |
           zip -r all-results.zip results
           echo "END"

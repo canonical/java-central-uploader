@@ -33,7 +33,7 @@ function run_tests(){
     echo "" >> $STD_OUT
 
     FORMAT_TIME="\n***************************************\nTIMINGS:\n%E real\n%U user\n%S sys"
-    ls
+
     echo "Before running the test!"
     ./tests.sh "${FOLDER}" >> $STD_OUT 2> $STD_ERR
 
