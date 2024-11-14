@@ -15,7 +15,6 @@ echo " "
 echo " Running tests..."
 # Run maven tests 
 mvn test -fn 
-# -Dhadoop.version=3.3.6-ubuntu1
 
 echo " "
 echo " Finished."
